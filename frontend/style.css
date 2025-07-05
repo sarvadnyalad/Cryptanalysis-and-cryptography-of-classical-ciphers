@@ -1,0 +1,330 @@
+.container {
+    max-width: 900px;
+    margin: 50px auto;
+    background-color: rgba(255, 255, 255, 0.92);
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    position: relative; /* Ensures it stays above the background */
+}
+
+.dark-mode {
+    background-color: #121212;
+    color: white;
+}
+
+.dark-mode .container {
+    background-color: rgba(18, 18, 18, 0.9); /* Dark mode container background */
+}
+
+.dark-mode .form-control {
+    background-color: #1f1f1f;
+    color: white;
+    border-color: #444;
+}
+
+/* Navbar Styling */
+.navbar {
+    position: fixed;
+    top: 0;
+    left: -250px;
+    width: 250px;
+    height: 100%;
+    background-color: #101011; /* Dark blue background */
+    padding: 20px;
+    transition: 0.3s;
+    z-index: 1;
+    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.3); /* Add shadow for depth */
+}
+
+.navbar a {
+    color: #ecf0f1; /* Light gray text */
+    display: block;
+    padding: 12px 15px;
+    text-decoration: none;
+    font-size: 18px;
+    font-family: 'Arial', sans-serif;
+    border-radius: 5px; /* Rounded corners */
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.navbar a:hover {
+    background-color: #34495e; /* Slightly lighter blue on hover */
+    transform: translateX(5px); /* Slight right shift on hover */
+}
+
+.navbar a:active {
+    background-color: #1abc9c; /* Highlight color when clicked */
+}
+
+/* Close button styling */
+.navbar a[onclick="closeNav()"] {
+    background-color: #e74c3c; /* Red background for close button */
+    color: white;
+    text-align: center;
+    margin-bottom: 20px;
+    font-weight: bold;
+}
+
+.navbar a[onclick="closeNav()"]:hover {
+    background-color: #c0392b; /* Darker red on hover */
+}
+
+/* Navbar toggle button */
+#navToggle {
+    cursor: pointer;
+    position: fixed;
+    top: 15px;
+    left: 15px;
+    z-index: 2;
+    font-size: 30px;
+    color: #2c3e50; /* Dark blue color */
+    background-color: #ecf0f1; /* Light gray background */
+    padding: 10px;
+    border-radius: 50%; /* Circular button */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Add shadow */
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+#navToggle:hover {
+    background-color: #34495e; /* Darker blue on hover */
+    color: #ecf0f1; /* Light gray text on hover */
+}
+
+
+
+/* Dark mode adjustments for navbar */
+.dark-mode .navbar {
+    background-color: #121212; /* Dark background for dark mode */
+}
+
+.dark-mode .navbar a {
+    color: #ffffff; /* White text in dark mode */
+}
+
+.dark-mode .navbar a:hover {
+    background-color: #1f1f1f; /* Slightly lighter background on hover */
+}
+
+.dark-mode #navToggle {
+    color: #ffffff; /* White text in dark mode */
+    background-color: #333; /* Dark background for toggle button */
+}
+
+.dark-mode #navToggle:hover {
+    background-color: #444; /* Slightly lighter background on hover */
+}
+
+/* Cipher Selection Grid */
+.cipher-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* Two columns side by side */
+    gap: 20px; /* Space between the two boxes */
+    margin-bottom: 20px;
+}
+
+.cipher-box {
+    background-color: rgba(255, 255, 255, 0.95); /* Semi-transparent white */
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+.cipher-box:hover {
+    transform: translateY(-5px); /* Slight lift on hover */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); /* Enhanced shadow on hover */
+}
+
+.cipher-box label {
+    font-weight: bold;
+    margin-bottom: 10px;
+    display: block;
+    color: #333;
+}
+
+.cipher-box select {
+    width: 100%;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+    background-color: #fff;
+    font-size: 16px;
+    transition: border-color 0.3s ease-in-out;
+}
+
+.cipher-box select:focus {
+    border-color: #007bff; /* Highlight focus */
+    outline: none;
+}
+
+/* Buttons */
+.btn-primary {
+    background-color: #007bff;
+    border: none;
+    font-weight: bold;
+    padding: 10px 20px;
+    border-radius: 5px;
+    transition: background-color 0.3s ease-in-out;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+}
+
+.btn-success {
+    background-color: #28a745;
+    border: none;
+    font-weight: bold;
+    padding: 10px 20px;
+    border-radius: 5px;
+    transition: background-color 0.3s ease-in-out;
+}
+
+.btn-success:hover {
+    background-color: #218838;
+}
+
+/* Result Section */
+#outputText {
+    font-family: 'Courier New', monospace;
+    background: rgba(255, 255, 255, 0.1);
+    border-left: 3px solid #007bff;
+    padding: 15px;
+}
+
+/* Loading Spinner */
+#loadingSpinner {
+    display: none;
+    margin: 20px auto;
+}
+
+#cipherHint {
+    font-size: 1.1rem;
+    padding-top: 10px;
+}
+  
+.text-muted {
+    opacity: 0.3;
+  }
+  .text-success {
+    color: #28a745;
+  }
+
+  .flash {
+    animation: flashAnim 0.5s ease;
+}
+
+@keyframes flashAnim {
+    0% { background-color: yellow; }
+    100% { background-color: white; }
+}
+  
+/* Caesar letter-swap animation */
+#caesarDemo {
+    text-align: center;
+    font-size: 1.5rem;
+    margin-top: 1rem;
+  }
+  #caesarDemo .letter {
+    display: inline-block;
+    width: 2rem;
+    transition: background-color 0.5s, transform 0.5s;
+  }
+  #caesarDemo .highlight {
+    background-color: #ffe066;
+    transform: scale(1.2);
+  }
+  
+/* vigenere cipher animation */
+.vigenere-table td {
+  width: 2rem;
+  padding: 0.2rem;
+  text-align: center;
+}
+.vigenere-table .highlight {
+  background-color: #c3fade;
+  transform: scale(1.2);
+  transition: all 0.3s;
+}
+
+/* Playfair animation matrix */
+.playfair-matrix {
+   margin: 1rem auto;
+   border-collapse: collapse;
+}
+.playfair-matrix td {
+   width: 2rem;
+   height: 2rem;
+   text-align: center;
+   border: 1px solid #333;
+   font-weight: bold;
+   transition: background-color 0.5s;
+}
+.playfair-source {
+    background-color: #f9e79f; /* light yellow */
+}
+.playfair-target {
+    background-color: #aed6f1; /* light blue */
+}
+
+
+/* grid style.css */
+/* Simplified Rail Fence Grid */
+.rail-fence-grid {
+    overflow-x: auto;
+    margin: 20px 0;
+    padding: 10px;
+}
+
+.rail-fence-grid table {
+    border-collapse: collapse;
+    margin: 0 auto;
+    background-color: white;
+    border: 1px solid #ddd;
+}
+
+.rail-fence-grid td {
+    width: 35px;
+    height: 35px;
+    border: 1px solid #e0e0e0;
+    text-align: center;
+    vertical-align: middle;
+    font-family: monospace;
+    font-weight: bold;
+    position: relative;
+}
+
+/* Only green highlights */
+.rail-fence-grid .character-cell {
+    background-color: #e6f7e6; /* Light green background */
+    border: 2px solid #28a745; /* Green border */
+    color: #333;
+}
+
+/* Dark mode adjustments */
+.dark-mode .rail-fence-grid table {
+    background-color: #2d2d2d;
+    border-color: #444;
+}
+
+.dark-mode .rail-fence-grid td {
+    border-color: #444;
+    color: #eee;
+}
+
+.dark-mode .rail-fence-grid .character-cell {
+    background-color: #1e3a1e; /* Dark green */
+    border-color: #4CAF50;
+    color: white;
+}
+
+/* Cipher detect styling */
+#cipherHint .alert {
+    margin-bottom: 0;
+}
+.spinner-border {
+    vertical-align: middle;
+}
+
+

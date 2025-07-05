@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Study Guide - Classical Ciphers</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body { padding: 30px; background-color: #f8f9fa; }
+    h1, h2 { color: #2c3e50; }
+    .section-title { margin-top: 40px; }
+    .accordion-button:not(.collapsed) { background-color: #dee2e6; }
+  </style>
+</head>
+<body>
+
+<!-- Main container for the entire guide -->
+<div class="container">
+  <!-- Page heading and back button -->
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>Study Guide: Classical Ciphers</h1>
+    <a href="index.html" class="btn btn-secondary">← Back to Dashboard</a>
+  </div>
+
+  <!-- Substitution Ciphers -->
+  <h2 class="section-title">1. Substitution Ciphers</h2>
+  <div class="accordion" id="substitutionAccordion">
+
+    <!-- Caesar Cipher -->
+    <div class="accordion-item">
+      <h2 class="accordion-header" id="caesarHeader">
+        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#caesarCollapse">
+          Caesar Cipher <span class="badge bg-success ms-2">Easy</span>
+        </button>
+      </h2>
+      <div id="caesarCollapse" class="accordion-collapse collapse show" data-bs-parent="#substitutionAccordion">
+        <div class="accordion-body">
+          <div class="alert alert-secondary" role="alert">
+            <h5 class="alert-heading">🕰️ History Snapshot</h5>
+            <p>Invented by <strong>Julius Caesar</strong> around <strong>58 BC</strong> to secure military messages.</p>
+          </div>
+          
+          <!-- Cipher description and steps -->
+          <p><strong>Definition:</strong> A Caesar cipher shifts each letter in the plaintext by a fixed number of positions.</p>
+    
+          <h6>🔧 How It Works:</h6>
+          <ol>
+            <li>Choose a <em>shift value</em> (e.g., <code>+3</code>).</li>
+            <li>Shift each plaintext letter forward by that amount.</li>
+            <li>Wrap around from <code>Z → A</code> when you pass the end of the alphabet.</li>
+            <li>Leave non-letters (spaces, punctuation) unchanged.</li>
+          </ol>
+          
+          <!-- Caesar Cipher Example -->
+          <h6>🧮 Example:</h6>
+          <p>Plaintext: <code>HELLO</code> | Shift: <code>+3</code> | Ciphertext: <code>KHOOR</code></p>
+    
+          <div class="alert alert-info mt-3" role="alert">
+            <h5 class="alert-heading">💡 Fun Fact</h5>
+            <p>A shift of <code>13</code> is called <strong>ROT13</strong>, often used online to hide spoilers.</p>
+          </div>
+    
+          <hr>
+          
+          <!-- Each letter animated one-by-one using JavaScript -->
+          <h6>💫 HELLO → KHOOR Animation</h6>
+          <div id="caesarDemo">
+            <span class="letter">H</span>
+            <span class="letter">E</span>
+            <span class="letter">L</span>
+            <span class="letter">L</span>
+            <span class="letter">O</span>
+          </div>
+    
+          <script>
+            document.addEventListener('DOMContentLoaded', () => {
+              const plaintext = ['H','E','L','L','O'];
+              const shift = 3;
+              const cipher = plaintext.map(ch =>
+                String.fromCharCode(((ch.charCodeAt(0) - 65 + shift) % 26) + 65)
+              );
+              const letters = document.querySelectorAll('#caesarDemo .letter');
+              let idx = 0;
+    
+              function animateNext() {
+                if (idx >= letters.length) return;
+                const el = letters[idx];
+                // highlight current letter
+                el.classList.add('highlight');
+                // after 0.5s, swap to cipher letter
+                setTimeout(() => {
+                  el.textContent = cipher[idx];
+                }, 500);
+                // after another 0.5s, remove highlight and move on
+                setTimeout(() => {
+                  el.classList.remove('highlight');
+                  idx++;
+                  animateNext();
+                }, 1000);
+              }
+    
+              animateNext();
+            });
+          </script>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- Vigenère Cipher -->
+    <div class="accordion-item">
+      <h2 class="accordion-header" id="vigenereHeader">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#vigenereCollapse">
+          Vigenère Cipher <span class="badge bg-warning text-dark ms-2">Medium</span>
+        </button>
+      </h2>
+      <div id="vigenereCollapse" class="accordion-collapse collapse" data-bs-parent="#substitutionAccordion">
+        <div class="accordion-body">
+    
+          <div class="alert alert-secondary" role="alert">
+            <h5 class="alert-heading">🕰️ History Snapshot</h5>
+            <p><strong>Giovan Battista Bellaso</strong> described the method in <strong>1553</strong>, later misattributed to <strong>Blaise de Vigenère</strong>.</p>
+          </div>
+    
+          <p><strong>Definition:</strong> A polyalphabetic substitution cipher that uses a repeating keyword to vary the shift for each letter.</p>
+    
+          <h6>🔧 How It Works:</h6>
+          <ol>
+            <li>Choose a keyword (e.g., <code>LEMON</code>).</li>
+            <li>Repeat the keyword to match the length of the plaintext.</li>
+            <li>For each letter, shift the plaintext letter by the alphabetical index of the corresponding keyword letter (A=0, B=1, …).</li>
+            <li>Wrap around from <code>Z → A</code> if needed. Non-letters remain unchanged.</li>
+          </ol>
+    
+          <h6>🧮 Example:</h6>
+          <p>
+            Plaintext: <code>ATTACKATDAWN</code><br>
+            Keyword: <code>LEMONLEMONLE</code><br>
+            Ciphertext: <code>LXFOPVEFRNHR</code>
+          </p>
+    
+          <div class="alert alert-info mt-3" role="alert">
+            <h5 class="alert-heading">💡 Fun Fact</h5>
+            <p>For centuries, the Vigenère cipher was called “le chiffre indéchiffrable” (the indecipherable cipher).</p>
+          </div>
+    
+          <hr>
+    
+          <h6>💫 ATTACKATDAWN → LXFOPVEFRNHR Animation</h6>
+          <div class="table-responsive">
+            <table class="table table-borderless vigenere-table">
+              <tbody>
+                <tr id="vigPlain">
+                  <td>A</td><td>T</td><td>T</td><td>A</td><td>C</td><td>K</td><td>A</td><td>T</td><td>D</td><td>A</td><td>W</td><td>N</td>
+                </tr>
+                <tr id="vigKey">
+                  <td>L</td><td>E</td><td>M</td><td>O</td><td>N</td><td>L</td><td>E</td><td>M</td><td>O</td><td>N</td><td>L</td><td>E</td>
+                </tr>
+                <tr id="vigCipher">
+                  <td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>
+                  <td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>
+                  <td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+    
+          <script>
+            document.addEventListener('DOMContentLoaded', () => {
+              const plain = [...'ATTACKATDAWN'];
+              const key   = [...'LEMONLEMONLE'];
+              const cipher = plain.map((ch, i) =>
+                String.fromCharCode(((ch.charCodeAt(0) - 65 + (key[i].charCodeAt(0) - 65)) % 26) + 65)
+              );
+              const pCells = document.querySelectorAll('#vigPlain td');
+              const kCells = document.querySelectorAll('#vigKey td');
+              const cCells = document.querySelectorAll('#vigCipher td');
+              let idx = 0;
+    
+              function animate() {
+                if (idx >= plain.length) return;
+                // Highlight plaintext & key
+                pCells[idx].classList.add('highlight');
+                kCells[idx].classList.add('highlight');
+    
+                // After 0.5s, reveal cipher letter
+                setTimeout(() => {
+                  cCells[idx].textContent = cipher[idx];
+                }, 500);
+    
+                // After 1s, clear highlight and proceed
+                setTimeout(() => {
+                  pCells[idx].classList.remove('highlight');
+                  kCells[idx].classList.remove('highlight');
+                  idx++;
+                  animate();
+                }, 1000);
+              }
+              animate();
+            });
+          </script>
+    
+        </div>
+      </div>
+    </div>
+
+    <!-- Playfair Cipher -->
+    <div class="accordion-item">
+      <h2 class="accordion-header" id="playfairHeader">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#playfairCollapse">
+          Playfair Cipher <span class="badge bg-warning text-dark ms-2">Medium</span>
+        </button>
+      </h2>
+      <div id="playfairCollapse" class="accordion-collapse collapse" data-bs-parent="#substitutionAccordion">
+        <div class="accordion-body">
+          <div class="alert alert-secondary" role="alert">
+            <h5 class="alert-heading">🕰️ History Snapshot</h5>
+            <p>Developed by <strong>Charles Wheatstone</strong> in <strong>1854</strong> and promoted by <strong>Lord Playfair</strong>.</p>
+          </div>
+          <p><strong>Definition:</strong> Encrypts pairs of letters (digraphs) using a 5×5 keyword matrix, combining I/J.</p>
+          <h6>🔧 How It Works:</h6>
+          <ol>
+            <li>Build a 5×5 grid from the keyword (merge I/J).</li>
+            <li>Split plaintext into digraphs (insert X between repeats, pad if needed).</li>
+            <li>For each pair:
+              <ul>
+                <li><strong>Same row:</strong> replace each with letter to its right (wrap).</li>
+                <li><strong>Same column:</strong> replace each with letter below (wrap).</li>
+                <li><strong>Rectangle:</strong> replace each with letter in its row at its partner’s column.</li>
+              </ul>
+            </li>
+          </ol>
+          <h6>🧮 Example:</h6>
+          <p>
+            Keyword: <code>MONARCHY</code><br>
+            Plaintext: <code>HELLO</code> → Pairs: <code>HE LL OX</code><br>
+            Ciphertext: <code>BM ND ZB</code>
+          </p>
+          <div class="alert alert-info mt-3" role="alert">
+            <h5 class="alert-heading">💡 Fun Fact</h5>
+            <p>Playfair was the first practical digraph cipher—far stronger than simple substitution.</p>
+          </div>
+    
+          <hr>
+    
+          <h6>💫 HELLO → BM  ND  ZB Visualization</h6>
+          <div id="playfairAnimation">
+            <table class="playfair-matrix">
+              <tbody>
+                <tr><td>M</td><td>O</td><td>N</td><td>A</td><td>R</td></tr>
+                <tr><td>C</td><td>H</td><td>Y</td><td>B</td><td>D</td></tr>
+                <tr><td>E</td><td>F</td><td>G</td><td>I</td><td>K</td></tr>
+                <tr><td>L</td><td>P</td><td>Q</td><td>S</td><td>T</td></tr>
+                <tr><td>U</td><td>V</td><td>W</td><td>X</td><td>Z</td></tr>
+              </tbody>
+            </table>
+            <p id="playfairPair" class="text-center mt-2 fs-5"></p>
+          </div>
+    
+          <script>
+            document.addEventListener('DOMContentLoaded', () => {
+              const digraphs = ['HE','LL','OX'];
+              const ciphers  = ['BM','ND','ZB'];
+              const cells = Array.from(document.querySelectorAll('.playfair-matrix td'));
+              const pairEl = document.getElementById('playfairPair');
+              let idx = 0;
+    
+              function animatePlayfair() {
+                if (idx >= digraphs.length) return;
+                // clear previous highlights
+                cells.forEach(cell => {
+                  cell.classList.remove('playfair-source', 'playfair-target');
+                });
+    
+                const [a,b] = digraphs[idx].split('');
+                const [c,d] = ciphers[idx].split('');
+                // highlight source
+                const srcA = cells.find(td => td.textContent === a);
+                const srcB = cells.find(td => td.textContent === b);
+                srcA.classList.add('playfair-source');
+                srcB.classList.add('playfair-source');
+                pairEl.textContent = `${a}${b} → `;
+    
+                // after 0.7s, highlight target and complete text
+                setTimeout(() => {
+                  const tgtC = cells.find(td => td.textContent === c);
+                  const tgtD = cells.find(td => td.textContent === d);
+                  tgtC.classList.add('playfair-target');
+                  tgtD.classList.add('playfair-target');
+                  pairEl.textContent += `${c}${d}`;
+                }, 700);
+    
+                // next digraph
+                setTimeout(() => {
+                  idx++;
+                  animatePlayfair();
+                }, 2000);
+              }
+    
+              animatePlayfair();
+            });
+          </script>
+        </div>
+      </div>
+    </div>
+
+  <!-- Transposition Ciphers -->
+  <h2 class="section-title">2. Transposition Ciphers</h2>
+  <div class="accordion" id="transpositionAccordion">
+
+    <!-- Rail Fence Cipher -->
+<div class="accordion-item">
+  <h2 class="accordion-header" id="railHeader">
+    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#railCollapse">
+      Rail Fence Cipher <span class="badge bg-success ms-2">Easy</span>
+    </button>
+  </h2>
+  <div id="railCollapse" class="accordion-collapse collapse" data-bs-parent="#transpositionAccordion">
+    <div class="accordion-body">
+      <div class="alert alert-secondary" role="alert">
+        <h5 class="alert-heading">🕰️ History Snapshot</h5>
+        <p>The Rail Fence cipher was used historically by rail networks; its name refers to writing in a zigzag pattern across imaginary rails.</p>
+      </div>
+      <p><strong>Definition:</strong> A cipher that rearranges letters by writing them in a zigzag across multiple rows (rails) and then reading row by row.</p>
+      <h6>🔧 How It Works:</h6>
+      <ol>
+        <li>Choose number of <em>rails</em> (e.g., <code>3</code>).</li>
+        <li>Write plaintext diagonally down and up across the rails.</li>
+        <li>Read off each row in sequence to form the ciphertext.</li>
+      </ol>
+      <h6>🧮 Example:</h6>
+      <p>
+        Plaintext: <code>HELLOWORLD</code><br>
+        Rails: <code>3</code><br>
+        Zigzag writing:
+        <pre>
+        H . . . O . . . L . 
+        . E . L . W . R . D
+        . . L . . . O . . .
+        </pre>
+        Ciphertext: <code>HOLELWRLOD</code>
+      </p>
+      <div class="alert alert-info mt-3" role="alert">
+        <h5 class="alert-heading">💡 Fun Fact</h5>
+        <p>This “zigzag” pattern was considered secure in early telegraphy due to its simplicity and obscurity.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Columnar Transposition Cipher -->
+<div class="accordion-item">
+  <h2 class="accordion-header" id="columnarHeader">
+    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#columnarCollapse">
+      Columnar Transposition Cipher <span class="badge bg-warning text-dark ms-2">Medium</span>
+    </button>
+  </h2>
+  <div id="columnarCollapse" class="accordion-collapse collapse" data-bs-parent="#transpositionAccordion">
+    <div class="accordion-body">
+      <div class="alert alert-secondary" role="alert">
+        <h5 class="alert-heading">🕰️ History Snapshot</h5>
+        <p>Leon Battista Alberti described early forms in the 15th century; used widely for naval communications in WWII.</p>
+      </div>
+      <p><strong>Definition:</strong> A cipher that writes the plaintext into rows under a keyword, then reads off columns in the order defined by the keyword’s sorted letters.</p>
+      <h6>🔧 How It Works:</h6>
+      <ol>
+        <li>Write plaintext in rows under each letter of the <em>keyword</em>.</li>
+        <li>Assign each column a number based on the alphabetical order of the keyword letters.</li>
+        <li>Read down columns in numeric order to produce the ciphertext.</li>
+      </ol>
+      <h6>🧮 Example:</h6>
+      <p>
+        Plaintext: <code>WEAREDISCOVERED</code><br>
+        Keyword: <code>ZEBRAS</code><br>
+        Column order: <code>6 3 2 4 1 5</code><br>
+        Table:
+        <pre>
+        Z  E  B  R  A  S
+        6  3  2  4  1  5
+        W  E  A  R  E  D
+        I  S  C  O  V  E
+        R  E  D  X  X  X
+        </pre>
+        Ciphertext: <code><b>EVACDESERODEWIR</b></code>
+      </p>
+      <div class="alert alert-info mt-3" role="alert">
+        <h5 class="alert-heading">💡 Fun Fact</h5>
+        <p>This cipher was prized for its improved resistance to simple frequency analysis compared to basic transposition.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Brute-Force Attack -->
+<h2 class="section-title">3. Brute-Force Attack <span class="badge bg-primary ms-2">Easy to Learn</span></h2>
+<div class="mb-4">
+  <p><strong>Definition:</strong> A brute-force attack tries every possible key until the decrypted text becomes readable.</p>
+  <h6>🔧 Steps to Map Ciphertext Without the Key:</h6>
+  <ol>
+    <li>Write down the <em>ciphertext</em> (e.g., <code>KHOOR</code>).</li>
+    <li>Pick a candidate shift (1 through 25).</li>
+    <li>Apply that shift as a Caesar decryption.</li>
+    <li>Read the result—does it look like English?</li>
+    <li>If not, move to the next shift and repeat until you find the correct one.</li>
+  </ol>
+
+  <h6>🕹️ Animation Demo:</h6>
+  <p>The table below cycles through the first five shift attempts:</p>
+  <div class="table-responsive">
+    <table class="table table-bordered" id="bruteTable">
+      <thead class="table-light">
+        <tr><th>Shift</th><th>Decrypted Text</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>1</td><td>J G N N Q</td></tr>
+        <tr><td>2</td><td>I F M M P</td></tr>
+        <tr><td>3</td><td><strong>H E L L O</strong></td></tr>
+        <tr><td>4</td><td>G D K K N</td></tr>
+        <tr><td>5</td><td>F C J J M</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <script>
+    // Basic animation: highlight each row in turn
+    (() => {
+      const rows = document.querySelectorAll("#bruteTable tbody tr");
+      let idx = 0;
+      setInterval(() => {
+        rows.forEach((r,i) => 
+          r.classList.toggle("table-active", i === idx)
+        );
+        idx = (idx + 1) % rows.length;
+      }, 1000);
+    })();
+  </script>
+</div>
+
+<!-- Mapping Ciphertext to Plaintext -->
+<h2 class="section-title">4. Mapping Ciphertext to Plaintext <span class="badge bg-primary ms-2">Guide</span></h2>
+<div class="mb-4">
+  <p><strong>Purpose:</strong> Show how to systematically map letters from a ciphertext to their plaintext equivalents when you don't know the key.</p>
+  <p><strong>Manually decrytion of any CipherText without knowing the KEY, Number of Rails,etc, can be quite time consuming</strong></p>
+
+  <h6>🔧 Step-by-Step Guide:</h6>
+  <ol>
+    <li><strong>Collect enough ciphertext</strong> (ideally 50–100 characters) to get reliable statistics.</li>
+    <li><strong>Frequency analysis:</strong> Count each letter's occurrences in the ciphertext.</li>
+    <li><strong>Hypothesize:</strong> Match the top 3–5 most frequent ciphertext letters to English's most common letters (E, T, A, O, I).</li>
+    <li><strong>Build a mapping table</strong>:  
+      <pre style="background:#f9f9f9;padding:10px;border-radius:5px;">
+        Cipher:  X  Q  Z  K  …  
+        Plain :  E  T  A  O  …  
+      </pre>
+    </li>
+    <li><strong>Apply & review:</strong> Substitute mapped letters into the ciphertext. Look for small words ("THE", "AND") emerging.</li>
+    <li><strong>Iterate:</strong> Refine your table—swap unlikely mappings, fill in new letters—until the plaintext reads clearly.</li>
+  </ol>
+
+  <div class="alert alert-info mt-3" role="alert">
+    <h5 class="alert-heading">💡 Tip</h5>
+    <p>Common digraphs (TH, HE, IN) and repeated patterns can help confirm or adjust your mappings.</p>
+  </div>
+</div>
+
+  <!-- 🔖 Glossary -->
+  <h2 class="section-title mt-5">🔖 Glossary</h2>
+  <div class="table-responsive mb-5">
+    <table class="table table-bordered">
+      <thead class="table-light">
+        <tr>
+          <th>Term</th>
+          <th>Definition</th>
+          <th>Learn More</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Digraph</strong></td>
+          <td>A pair of letters treated as a single unit (used by the Playfair cipher).</td>
+          <td><a href="https://en.wikipedia.org/wiki/Digraph" target="_blank">Wikipedia</a></td>
+        </tr>
+        <tr>
+          <td><strong>Polyalphabetic</strong></td>
+          <td>Using multiple substitution alphabets (as in the Vigenère cipher).</td>
+          <td><a href="https://en.wikipedia.org/wiki/Polyalphabetic_cipher" target="_blank">Wikipedia</a></td>
+        </tr>
+        <tr>
+          <td><strong>Frequency analysis</strong></td>
+          <td>A statistical method of breaking ciphers by counting letter frequencies.</td>
+          <td><a href="https://en.wikipedia.org/wiki/Frequency_analysis" target="_blank">Wikipedia</a></td>
+        </tr>
+        <tr>
+          <td><strong>Monoalphabetic</strong></td>
+          <td>Using a single fixed substitution alphabet (as in the Caesar cipher).</td>
+          <td><a href="https://en.wikipedia.org/wiki/Substitution_cipher#Monoalphabetic_substitution_cipher" target="_blank">Wikipedia</a></td>
+        </tr>
+        <tr>
+          <td><strong>Transposition</strong></td>
+          <td>Reordering the letters of the plaintext without changing them (Rail Fence, Columnar).</td>
+          <td><a href="https://en.wikipedia.org/wiki/Transposition_cipher" target="_blank">Wikipedia</a></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

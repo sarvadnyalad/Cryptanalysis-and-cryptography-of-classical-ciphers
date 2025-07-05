@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cipher Tool</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Knowledge Check Modal (insert immediately after <body>) -->
+    <div class="modal fade" id="knowledgeModal" tabindex="-1" aria-labelledby="knowledgeModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="knowledgeModalLabel">Quick Question</h5>
+            </div>
+            <div class="modal-body">
+              <p>Are you already familiar with classical ciphers and ready to use the encryption/decryption tools?</p>
+            </div>
+            <div class="modal-footer">
+              <button type="button" id="knowledgeYes" class="btn btn-primary">Yes, continue</button>
+              <button type="button" id="knowledgeNo" class="btn btn-secondary">No, show study guide</button>
+            </div>
+          </div>
+        </div>
+    </div>
+
+<div id="navToggle">&#9776;</div>
+
+<div class="navbar" id="mySidebar">
+    <a href="#" onclick="closeNav()">Close &times;</a>
+    <a href="#">Home</a>
+    <a href="study_guide.html">Ciphers Guide</a>
+    <a href="bruteforce.html">Brute Force Caesar</a>
+    <a href="frequencyanalysis.html">Frequency Analysis</a>
+    <a href="crack_cipher.html">Crack Cipher Manually</a>
+    <a href="quiz.html">Quiz</a>
+</div>
+
+<div class="container">
+
+      <!-- Knowledge Check Inline -->
+  <div class="alert alert-warning text-center mb-4" role="alert">
+    <strong>Quick Question:</strong> Are you already familiar with classical ciphers?
+    <br>
+    <button id="knowYes" class="btn btn-sm btn-primary mt-2 me-2">Yes, take me to tools</button>
+    <button id="knowNo" class="btn btn-sm btn-secondary mt-2">No, show study guide</button>
+  </div>
+
+
+    <h1 class="text-center mb-4"><b>Interactive Tool for Classical Cipher</b></h1>
+    <div class="form-check form-switch text-end">
+        <input class="form-check-input" type="checkbox" id="darkModeToggle" onclick="toggleDarkMode()">
+        <label class="form-check-label" for="darkModeToggle">Enable Dark Mode</label>
+    </div>
+
+    <div class="mb-3">
+        <label for="textInput" class="form-label">Enter Text:</label>
+        <textarea id="textInput" class="form-control" rows="3" placeholder="Enter text here..."></textarea>
+    </div>
+
+    <!-- Cipher Selection Grid -->
+    <div class="cipher-grid">
+        <!-- Substitution Ciphers Section -->
+        <div class="cipher-box">
+            <label for="substitutionCipher">Substitution Ciphers:</label>
+            <select id="substitutionCipher" class="form-select">
+                <option value="caesar">Caesar Cipher</option>
+                <option value="vigenere">Vigenère Cipher</option>
+                <option value="playfair">Playfair Cipher</option>
+            </select>
+        </div>
+
+        <!-- Transposition Ciphers Section -->
+        <div class="cipher-box">
+            <label for="transpositionCipher">Transposition Ciphers:</label>
+            <select id="transpositionCipher" class="form-select">
+                <option value="railfence">Rail Fence Cipher</option>
+                <option value="columnar">Columnar cipher</option>
+            </select>
+        </div>
+    </div>
+
+    <div id="caesarOptions" class="mb-3">
+        <label for="shiftValue" class="form-label">Shift Value (Caesar Cipher):</label>
+        <input type="number" id="shiftValue" class="form-control" min="1" max="25" value="3">
+    </div>
+
+    <div id="vigenereOptions" class="mb-3" style="display: none;">
+        <label for="vigenereKey" class="form-label">Vigenère Key:</label>
+        <input type="text" id="vigenereKey" class="form-control" placeholder="Enter key (letters only)">
+    </div>
+
+    <div id="playfairOptions" class="mb-3" style="display: none;">
+        <label for="playfairKey" class="form-label">Playfair Key:</label>
+        <input type="text" id="playfairKey" class="form-control" placeholder="Enter key (letters only)">
+    </div>
+
+    <div id="railfenceOptions" class="mb-3" style="display: none;">
+        <label for="railfenceRails" class="form-label">Number of Rails:</label>
+        <input type="number" id="railfenceRails" class="form-control" min="2" max="10" placeholder="Enter number of rails (e.g., 3)">
+    </div>
+
+    <div id="columnarOptions" class="mb-3" style="display: none;">
+        <label for="columnarKey" class="form-label">Columnar Key or Keyword:</label>
+        <input type="text" id="columnarKey" class="form-control" placeholder="e.g. SECRET or 0-2-1-3"/>
+    </div>
+
+    <div class="text-center">
+        <button class="btn btn-primary me-2" onclick="processText('encrypt')">Encrypt</button>
+        <button class="btn btn-success" onclick="processText('decrypt')">Decrypt</button>
+    </div>
+
+    <div class="text-center mt-3">
+        <div id="loadingSpinner" class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+    </div>
+
+    <div class="mt-4">
+        <h4>Result:</h4>
+        <p id="outputText" class="border p-2 bg-white"></p>
+    </div>
+
+    <!-- Railfence Grid Display Area -->
+    <div class="mt-3 text-center" id="gridButtonContainer" style="display: none;">
+        <button class="btn btn-info" onclick="showRailFenceGrid()">Show Grid</button>
+    </div>
+    
+    <!-- Grid Display Area -->
+    <div id="railFenceGrid" class="mt-4 p-3 border rounded bg-light" style="display: none;">
+        <h5>Rail Fence Pattern:</h5>
+        <div id="gridVisualization"></div>
+    </div>
+</div>
+
+<script src="script.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

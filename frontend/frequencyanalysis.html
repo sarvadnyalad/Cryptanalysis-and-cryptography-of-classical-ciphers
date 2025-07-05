@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Frequency Analysis</title>
+
+    <!-- Load Bootstrap CSS for layout and components -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Link to your custom stylesheet -->
+    <link rel="stylesheet" href="style.css">
+
+    <!-- Load Chart.js for rendering frequency bar charts -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+<!-- Sidebar toggle button -->
+<div id="navToggle">&#9776;</div>
+
+<!-- Sidebar navigation menu -->
+<div class="navbar" id="mySidebar">
+    <a href="#" onclick="closeNav()">Close &times;</a>
+    <a href="#">Home</a>
+    <a href="study_guide.html">Ciphers Guide</a>
+    <a href="bruteforce.html">Brute Force Caesar</a>
+    <a href="frequencyanalysis.html">Frequency Analysis</a>
+    <a href="crack_cipher.html">Crack Cipher Manually</a>
+    <a href="quiz.html">Quiz</a>
+</div>
+
+<!-- Main page content -->
+<div class="container">
+    <!-- Page heading -->
+    <h2 class="text-center mb-4">📊 Frequency Analysis</h2>
+
+    <!-- User input area for text to analyze -->
+    <div class="mb-3">
+        <label for="analysisText" class="form-label">Enter Text:</label>
+        <textarea id="analysisText" class="form-control" rows="3" placeholder="Enter text for frequency analysis..."></textarea>
+    </div>
+
+    <!-- Analyze button to trigger frequency breakdown -->
+    <div class="text-center">
+        <button class="btn btn-primary" onclick="performFrequencyAnalysis()">Analyze</button>
+    </div>
+
+    <!-- Spinner shown while processing the input -->
+    <div id="loadingSpinner" class="spinner-border text-primary mt-3" role="status" style="display: none;">
+        <span class="visually-hidden">Loading...</span>
+    </div>
+
+    <!-- Table to show letter frequencies found in user's text -->
+    <div class="mt-4">
+        <h4>🔠 Letter Frequency Table:</h4>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Letter</th>
+                    <th>Your Text (%)</th>
+                </tr>
+            </thead>
+            <tbody id="frequencyTable"></tbody>
+        </table>
+    </div>
+
+    <!-- Table comparing user text frequency to standard English letter frequencies -->
+    <div class="mt-4">
+        <h4>📊 Frequency Comparison (Your Text vs. English):</h4>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Letter</th>
+                    <th>Your Text (%)</th>
+                    <th>English (%)</th>
+                </tr>
+            </thead>
+            <tbody id="comparisonTable"></tbody>
+        </table>
+    </div>
+
+    <!-- Bar chart showing visual comparison of frequencies -->
+    <div class="mt-4">
+        <h4>📊 Frequency Chart:</h4>
+        <canvas id="frequencyChart"></canvas>
+    </div>
+
+    <!-- Bar chart showing visual download of frequencies -->
+    <div class="text-center mt-3">
+        <button class="btn btn-outline-success" onclick="downloadChartImage()">⬇️ Download Chart as Image</button>
+    </div>
+</div>
+
+<!-- Custom script for logic like frequency analysis -->
+<script src="script.js"></script>
+
+<!-- Bootstrap script for responsive features like modals -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

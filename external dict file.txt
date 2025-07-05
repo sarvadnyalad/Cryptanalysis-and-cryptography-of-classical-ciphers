@@ -1,0 +1,8 @@
+ Medium Dictionary (Balanced)
+Use Case: Good balance between speed and comprehensiveness.
+
+Example: words_alpha.txt (370k+ words)
+
+Source: https://github.com/dwyl/english-words
+
+Direct file: words_alpha.txt

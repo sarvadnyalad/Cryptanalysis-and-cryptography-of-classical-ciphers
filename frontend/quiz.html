@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />  <!-- ensure correct text encoding -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>  <!-- make it responsive on mobile -->
+  <title>Cipher Quiz Challenge</title>
+
+  <style>
+    /* theme colors and gradients */
+    :root {
+      --bg-gradient: linear-gradient(to right, #1e3c72, #2a5298);
+      --container-bg: #ffffff;
+      --text-color: #333333;
+      --btn-bg: #1e3c72;
+      --btn-hover: #16325c;
+    }
+
+    /* center everything and apply the main background + font settings */
+    body {
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--bg-gradient);
+      color: var(--text-color);
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      transition: background 0.5s, color 0.5s;  /* smooth theme changes */
+    }
+
+    /* dark mode palette */
+    body.theme-dark {
+      --bg-gradient: #121212;
+      --container-bg: #1e1e1e;
+      --text-color: #ffffff;
+      --btn-bg: #bb86fc;
+      --btn-hover: #9a6ef2;
+    }
+
+    /* vintage parchment vibe */
+    body.theme-vintage {
+      --bg-gradient: linear-gradient(135deg, #fdf0c2 0%, #f4e1a2 100%);
+      --container-bg: rgba(250,240,200,0.85);
+      --text-color: #3a2f0b;
+      --btn-bg: #8b5e34;
+      --btn-hover: #6f4c24;
+    }
+
+    /* the white “card” that holds the quiz */
+    .container {
+      position: relative;               /* for positioning the theme dropdown */
+      background: var(--container-bg);
+      border-radius: 15px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+      max-width: 600px;
+      width: 90%;
+      padding: 2rem;
+      overflow: hidden;
+      transition: background 0.5s;      /* fade background on theme switch */
+    }
+
+    /* dropdown in the top-right to switch themes */
+    #theme-selector {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      padding: 0.25rem;
+      border-radius: 4px;
+      border: none;
+      font-size: 0.9rem;
+    }
+
+    /* wrapper for the progress bar track */
+    #progress-bar {
+      width: 100%;
+      height: 8px;
+      background: #eee;
+      border-radius: 4px;
+      overflow: hidden;
+      margin-bottom: 10px;
+    }
+
+    /* the moving part of the progress bar */
+    #progress {
+      width: 0%;                        /* starts empty */
+      height: 100%;
+      background: var(--btn-bg);
+      transition: width 0.4s ease;      /* smooth fill animation */
+    }
+
+    /* text showing “Question X of Y” */
+    #progress-text {
+      text-align: right;
+      font-size: 0.9rem;
+      color: #555;
+      margin-bottom: 1rem;
+    }
+
+    /* Animated transitions: slide and fade effects for question container */
+    .fade-out {
+    opacity: 0;
+    transform: translateX(-50px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    }
+
+    .fade-in {
+    opacity: 1;
+    transform: translateX(0);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    }
+
+    /* Badge popup: centered overlay for milestone awards */
+#badge-popup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: var(--container-bg);
+  padding: 2rem 3rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  text-align: center;
+  z-index: 1000;
+  display: none;               /* hidden until you earn a badge */
+  color: var(--text-color);
+  transition: background 0.5s, color 0.5s;
+}
+/* Bigger emoji/icon inside the badge popup */
+#badge-popup .badge {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+}
+
+/* Confetti pieces: tiny squares that fall and spin */
+.confetti-piece {
+  position: fixed;
+  width: 8px;
+  height: 8px;
+  opacity: 0.8;
+  top: 0;
+  animation: fall 3s linear infinite;
+  z-index: 999;
+}
+/* Confetti animation: drop from top and rotate out of view */
+@keyframes fall {
+  to {
+    transform: translateY(100vh) rotate(360deg);
+    opacity: 0;
+  }
+}
+
+/* General heading style: color matches current theme button color */
+h2 {
+  margin-top: 0;
+  color: var(--btn-bg);
+  transition: color 0.5s;
+}
+
+/* Button style: rounded, colored background, hover effect */
+.btn {
+  padding: 0.75rem 1.5rem;
+  margin: 1rem 0.5rem 0 0;
+  border: none;
+  border-radius: 30px;
+  background-color: var(--btn-bg);
+  color: #fff;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+.btn:hover {
+  background-color: var(--btn-hover);
+}
+
+/* Question text: a bit larger and aligned with icons */
+.question {
+  font-size: 1.2rem;
+  margin: 1rem 0;
+  display: flex;
+  align-items: center;
+}
+
+/* Answer list: remove bullets and padding */
+.answers {
+  list-style: none;
+  padding: 0;
+}
+.answers li {
+  margin-bottom: 0.75rem;  /* space between options */
+}
+/* Make radio buttons easier to click */
+.answers input[type="radio"] {
+  transform: scale(1.3);
+  margin-right: 0.5rem;
+  vertical-align: middle;
+}
+
+/* Feedback text (correct/incorrect) */
+.feedback {
+  margin-top: 1rem;
+  font-weight: bold;
+}
+
+/* Utility to hide elements */
+.hidden {
+  display: none;
+}
+
+/* Review container: light background and rounded corners */
+#review-container {
+  margin-top: 2rem;
+  background: #f3f3f3;
+  padding: 1rem;
+  border-radius: 8px;
+}
+#review-container div {
+  margin-bottom: 1rem;  /* space between reviewed answers */
+}
+
+/* Chart canvas styling: subtle background and rounded edges */
+canvas {
+  background: #fafafa;
+  border-radius: 8px;
+}
+
+  </style>
+</head>
+<body class="theme-default">
+  <!-- Main quiz container -->
+  <div class="container" id="quiz-box">
+    
+    <!-- Dropdown to switch between themes -->
+    <select id="theme-selector">
+      <option value="theme-default">Default Theme</option>
+      <option value="theme-dark">Dark Theme</option>
+      <option value="theme-vintage">Vintage Theme</option>
+    </select>
+
+    <!-- Start screen before quiz begins -->
+    <div id="start-page">
+      <h2>Cipher Quiz Challenge</h2>
+      <p>Test your cryptography knowledge with 7 curated questions.</p>
+      <button class="btn" onclick="startQuiz()">Start Quiz</button>
+    </div>
+
+    <!-- Quiz screen: appears once quiz starts -->
+    <div id="quiz-page" class="hidden">
+      <!-- Progress bar track and fill -->
+      <div id="progress-bar">
+        <div id="progress"></div>
+      </div>
+      <!-- Text “Question X of Y” -->
+      <div id="progress-text"></div>
+      <!-- Where the current question and options get injected -->
+      <div id="question-container" class="fade-in"></div>
+      <!-- Button to submit answer and move on -->
+      <button class="btn" onclick="nextQuestion()">Next</button>
+      <!-- Feedback area for correct/incorrect messages -->
+      <div id="feedback" class="feedback"></div>
+    </div>
+
+    <!-- Results screen: shown after last question -->
+    <div id="result-page" class="hidden">
+      <h2>Quiz Completed!</h2>
+      <!-- Final score display -->
+      <p id="score"></p>
+      <!-- Canvas for performance chart (correct vs wrong) -->
+      <canvas id="performance-chart" width="300" height="150"
+              style="display:block; margin:1rem auto;"></canvas>
+      <!-- Options to retry or review answers -->
+      <button class="btn" onclick="startQuiz()">Retry</button>
+      <button class="btn" onclick="reviewAnswers()">Review Answers</button>
+      <!-- Container for detailed answer review -->
+      <div id="review-container" class="hidden"></div>
+
+    <!-- Interactive Practice Tasks -->
+    <ul>
+        <li>
+          <strong>Caesar Warm-up:</strong><br>
+          Decrypt <code>KHOOR ZRUOG</code> until you see “HELLO WORLD.”<br>
+          <em>Bonus:</em> Decrypt  
+          <code>QEB NRFZH YOLTK CLU GRJMP LSBO QEB IXWV ALD</code>  
+          to get “THE QUICK BROWN FOX JUMPS OVER THE LAZY DOG.”
+        </li>
+        <li>
+          <strong>Rail Fence Practice:</strong><br>
+          Encrypt <em>HELLOWORLD</em> with 2 rails (e.g. “HLOWRDLEOL”)  
+          then switch rails to confirm it decrypts back.
+        </li>
+        <li>
+          <strong>Playfair Drill:</strong><br>
+          Keyword <code>SECRET</code>, text <code>BALLOON</code>,  
+          watch the tool insert <code>X</code> → pairs “BA LX LO ON.”
+        </li>
+        <li>
+          <strong>Frequency Starter:</strong><br>
+          Analyze <code>SPWWZ MFSG!</code>, map its top two letters  
+          to <code>E</code> and <code>T</code> to begin a substitution.
+        </li>
+    </ul>
+    
+    </div>
+</div>
+
+  <!-- Hidden badge popup for milestones -->
+  <div id="badge-popup">
+    <div class="badge">🏅</div>        <!-- Badge icon -->
+    <div id="badge-text"></div>     <!-- Badge name (e.g. “Cipher Novice”) -->
+  </div>
+
+<script>
+// Switch between themes when the dropdown changes
+document.getElementById('theme-selector')
+.addEventListener('change', e => {
+document.body.className = e.target.value;
+});
+
+    // Quiz data & state
+const questions = [
+  // ── Easy (4) ─────────────────────────────────────────────────────────────────
+{
+    icon: 'caesar',
+    q: "What type of cipher is the Caesar cipher?",
+    options: ["Transposition", "Substitution", "Block cipher", "Hashing"],
+    answer: "Substitution",
+    explanation: "Caesar cipher is a monoalphabetic substitution cipher."
+},
+{
+    icon: 'playfair',
+    q: "True or False: The Playfair cipher encrypts letters in pairs.",
+    options: ["True", "False"],
+    answer: "True",
+    explanation: "Playfair is a digraph substitution cipher encrypting pairs of letters."
+},
+{
+    icon: 'playfair',
+    q: "Which of the following ciphers uses a keyword matrix?",
+    options: ["Affine", "Vigenère", "Playfair", "Caesar"],
+    answer: "Playfair",
+    explanation: "Playfair uses a 5×5 matrix constructed from a keyword."
+},
+{
+    icon: 'vigenere',
+    q: "True or False: Vigenère cipher uses a fixed shift for every letter.",
+    options: ["True", "False"],
+    answer: "False",
+    explanation: "Vigenère uses multiple Caesar shifts based on a keyword."
+},
+
+  // ── Medium (3) ───────────────────────────────────────────────────────────────
+{
+    icon: 'vigenere',
+    q: "In the Vigenère cipher, if the key is 'KEY', what is the shift for the letter 'K'?",
+    options: ["10", "11", "20", "0"],
+    answer: "10",
+    explanation: "'K' is the 11th letter; with zero-based indexing, the shift is 10."
+},
+{
+    icon: 'caesar',
+    q: "Which classical cipher is most vulnerable to frequency analysis?",
+    options: ["Vigenère", "Playfair", "Caesar", "One-time pad"],
+    answer: "Caesar",
+    explanation: "Caesar has a fixed monoalphabetic substitution, making it easy to crack via frequency counts."
+},
+{
+    icon: 'columnar',
+    q: "Which classical cipher writes plaintext in rows and reads it column by column?",
+    options: ["Railfence", "Columnar Transposition", "Vigenère", "Playfair"],
+    answer: "Columnar Transposition",
+    explanation: "Columnar Transposition arranges text in a grid and then reads out by columns."
+},
+
+  // ── Hard (4) ────────────────────────────────────────────────────────────────
+{
+    icon: 'playfair',
+    q: "In Playfair cipher, when a digraph contains two identical letters, which filler letter is typically inserted?",
+    options: ["Q", "X", "Z", "K"],
+    answer: "X",
+    explanation: "Playfair uses 'X' to separate repeated letters so no pair is identical."
+},
+{
+    icon: 'railfence',
+    q: "Decrypt the ciphertext 'HWEOLRLLOD' encrypted with a Railfence cipher using 3 rails.",
+    options: ["HELLOWORLD", "HELOWORLD", "HOWELLRORD", "HOLLERWORLD"],
+    answer: "HELLOWORLD",
+    explanation: "On three rails, the zig-zag pattern reconstructs 'HELLOWORLD'."
+},
+{
+    icon: 'columnar',
+    q: "For a Columnar Transposition cipher with keyword 'ZEBRA', what numeric order is assigned to the letter 'R'?",
+    options: ["1", "2", "4", "5"],
+    answer: "4",
+    explanation: "Alphabetical order of 'ZEBRA' — A=1, B=2, E=3, R=4, Z=5."
+},
+{
+    icon: 'vigenere',
+    q: "Which statistical test is most commonly used to estimate the key length of a Vigenère cipher?",
+    options: ["Index of Coincidence", "Kasiski Examination", "Frequency Analysis", "Chi-squared Test"],
+    answer: "Index of Coincidence",
+    explanation: "The Index of Coincidence measures letter repetition to reveal likely key lengths."
+}
+];
+
+    // Current question index, total correct, answers log, streak count,
+    // flags so we only award badges once
+    let currentQuestion=0, score=0, userAnswers=[], streak=0, noviceAwarded=false, proAwarded=false;
+
+  // Prepare for a new quiz run: reset all counters, hide/show pages
+    function startQuiz() {
+      currentQuestion=0; score=0; userAnswers=[]; streak=0; noviceAwarded=false; proAwarded=false;
+      document.getElementById('start-page').classList.add('hidden');
+      document.getElementById('quiz-page').classList.remove('hidden');
+      document.getElementById('result-page').classList.add('hidden');
+      document.getElementById('feedback').innerText='';
+      document.getElementById('review-container').classList.add('hidden');
+      updateProgress(); showQuestion();
+    }
+
+    // refresh progress bar for question 1
+    function updateProgress() {
+      const total = questions.length;
+      const pct = (currentQuestion/total)*100;
+      document.getElementById('progress').style.width = `${pct}%`;
+      document.getElementById('progress-text').innerText =
+        `Question ${Math.min(currentQuestion+1,total)} of ${total}`;
+    }
+    
+    // inject first question into the DOM
+    function showQuestion() {
+      updateProgress();
+      const container = document.getElementById('question-container');
+      container.classList.remove('fade-in');
+      container.classList.add('fade-out');
+      setTimeout(() => {
+        const q = questions[currentQuestion];
+        container.innerHTML = `<div class="question">Q${currentQuestion+1}. ${q.q}</div>`;
+        const ul = document.createElement('ul'); ul.className='answers';
+        q.options.forEach(opt => {
+          const li = document.createElement('li');
+          li.innerHTML = `<label><input type="radio" name="answer" value="${opt}"/> ${opt}</label>`;
+          ul.appendChild(li);
+        });
+        container.appendChild(ul);
+        container.classList.remove('fade-out');
+        container.classList.add('fade-in');
+      }, 300);
+    }
+
+    function nextQuestion() {
+      const sel = document.querySelector('input[name="answer"]:checked');
+      if (!sel) return;
+      const ans = sel.value, corr = questions[currentQuestion].answer;
+      userAnswers.push({ question: questions[currentQuestion].q, selected: ans, correct: corr, explanation: questions[currentQuestion].explanation });
+      const fb = document.getElementById('feedback');
+      if (ans === corr) {
+        score++; streak++;
+        fb.innerText = `✅ Correct! ${questions[currentQuestion].explanation}`;
+        fb.style.color = 'green';
+        if (streak === 5 && !noviceAwarded) awardBadge('Cipher Novice');
+      } else {
+        fb.innerText = `❌ Incorrect. ${questions[currentQuestion].explanation}`;
+        fb.style.color = 'red'; streak = 0;
+      }
+      setTimeout(() => {
+        currentQuestion++; fb.innerText = '';
+        if (currentQuestion < questions.length) {
+          showQuestion(); updateProgress();
+        } else {
+          endQuiz();
+        }
+      }, 800);
+    }
+
+    function endQuiz() {
+      document.getElementById('quiz-page').classList.add('hidden');
+      document.getElementById('result-page').classList.remove('hidden');
+      document.getElementById('score').innerText = `You scored ${score} out of ${questions.length}`;
+      if (score === questions.length && !proAwarded) awardBadge('Cipher Pro');
+      drawChart();
+    }
+
+    function reviewAnswers() {
+      const rc = document.getElementById('review-container');
+      rc.innerHTML = '<h3>Review Your Answers:</h3>';
+      userAnswers.forEach((e,i) => {
+        const div = document.createElement('div');
+        div.innerHTML = `<strong>Q${i+1}:</strong> ${e.question}<br>
+                         <span style="color:${e.selected===e.correct?'green':'red'}; font-weight:bold;">
+                         Your Answer: ${e.selected}</span><br>
+                         Correct Answer: <strong>${e.correct}</strong><br>
+                         <em>${e.explanation}</em>`;
+        rc.appendChild(div);
+      });
+      rc.classList.remove('hidden');
+    }
+
+    function awardBadge(name) {
+      const bp = document.getElementById('badge-popup');
+      document.getElementById('badge-text').innerText = name;
+      bp.style.display = 'block';
+      launchConfetti();
+      setTimeout(() => { bp.style.display = 'none'; clearConfetti(); }, 4000);
+      if (name === 'Cipher Novice') noviceAwarded = true;
+      if (name === 'Cipher Pro') proAwarded = true;
+    }
+
+    function launchConfetti() {
+      for (let i = 0; i < 100; i++) {
+        const c = document.createElement('div');
+        c.className = 'confetti-piece';
+        c.style.left = Math.random()*window.innerWidth + 'px';
+        c.style.backgroundColor = `hsl(${Math.random()*360},100%,50%)`;
+        document.body.appendChild(c);
+      }
+    }
+
+    function clearConfetti() {
+      document.querySelectorAll('.confetti-piece').forEach(el => el.remove());
+    }
+
+    function drawChart() {
+      const canvas = document.getElementById('performance-chart');
+      const ctx = canvas.getContext('2d');
+      const total = questions.length, wrong = total - score;
+      const maxH = canvas.height - 40;
+      const corrH = score/total * maxH, wrongH = wrong/total * maxH;
+      const bw = 60;
+      ctx.clearRect(0,0,canvas.width,canvas.height);
+      ctx.fillStyle = '#4caf50';
+      ctx.fillRect(50, canvas.height - corrH - 20, bw, corrH);
+      ctx.fillStyle = '#f44336';
+      ctx.fillRect(150, canvas.height - wrongH - 20, bw, wrongH);
+      ctx.fillStyle = '#333';
+      ctx.font = '14px sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText('Correct', 50 + bw/2, canvas.height - 5);
+      ctx.fillText('Wrong', 150 + bw/2, canvas.height - 5);
+    }
+  </script>
+</body>
+</html>

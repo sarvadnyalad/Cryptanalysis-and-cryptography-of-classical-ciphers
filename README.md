@@ -70,8 +70,11 @@ More ciphers and tools will be added in future updates.
 
 ## 📸 Screenshots
 
-_Add screenshots of your tool’s interface here (e.g., dashboard, frequency analysis chart, manual cracking tool, study guide page)._
-
+![Dashboard Screenshot](screenshots/dashboard.png)
+![Frequency Analysis](screenshots/frequency_analysis.png)
+![Manual Decryption](screenshots/manual_decryption.png)
+![Manual Decryption and Dictionary mapping](screenshots/dictionary_and_manual_mapping.png)
+![Frequency Analysis Chart](screenshots/frequency_analysis_chart.png)
 ---
 
 ## 👨‍🎓 Educational Use

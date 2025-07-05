@@ -96,4 +96,4 @@ This project is licensed under the MIT License. See [LICENSE](LICENSE) for detai
 ## 📬 Contact
 
 Sarvadnya Lad  
-[GitHub](https://github.com/sarvadnyalad) • [LinkedIn](https://www.linkedin.com/in/sarvadnyalad/)
+[GitHub](https://github.com/sarvadnyalad) • [LinkedIn](https://www.linkedin.com/in/sarvadnya-lad-23793421b/)

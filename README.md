@@ -1,4 +1,4 @@
-# 🔐 Interactive Cryptanalysis Tool for Classical Ciphers
+# 🔐 Interactive Cryptanalysis and cryptography Tool for Classical Ciphers
 
 A web-based interactive tool that helps users decrypt classical ciphers like Caesar, Vigenère, and Playfair. This educational tool combines manual analysis with semi-automated suggestions to aid in cryptanalysis, ideal for learners and researchers in classical cryptography.
 
@@ -10,7 +10,7 @@ A web-based interactive tool that helps users decrypt classical ciphers like Cae
 - 📊 Letter frequency analysis for ciphertext
 - 📚 Dictionary-based auto-suggestion to guess likely plaintext words
 - 🔍 Pattern matching to assist decryption
-- 🛠️ Auto-detection of cipher category (substitution or transposition)
+- 🛠️ Auto-detection of cipher category (currently works for differentiating substitution or transposition)
 - 📖 Study Guide with theory, diagrams, and examples
 - 🎮 Interactive components: quizzes and flashcards (in study mode)
 
@@ -29,11 +29,8 @@ A web-based interactive tool that helps users decrypt classical ciphers like Cae
 ```
 /cryptanalysis-tool
 │
-├── static/              # CSS, JS files
-├── templates/           # HTML templates
-├── cipher_modules/      # Python cipher algorithms (Caesar, Vigenère, Playfair)
-├── app.py               # Flask application entry point
-├── requirements.txt     # Python dependencies
+├── frontend/            # CSS, JS files, HTML templates
+├── backend/             # Python cipher algorithms (Caesar, Vigenère, Playfair,etc), Flask application entry point
 └── README.md
 ```
 
@@ -55,7 +52,7 @@ pip install -r requirements.txt
 python app.py
 ```
 
-Then visit `http://127.0.0.1:5000/` in your browser.
+Then run the index.html file on any browser from frontend folder to open project dashboard alternatively you can  visit `http://127.0.0.1:5000/` in your browser.
 
 ---
 
@@ -64,6 +61,8 @@ Then visit `http://127.0.0.1:5000/` in your browser.
 - Caesar Cipher
 - Vigenère Cipher
 - Playfair Cipher
+- Rail Fence Cipher
+- Columnar Cipher
 
 More ciphers and tools will be added in future updates.
 

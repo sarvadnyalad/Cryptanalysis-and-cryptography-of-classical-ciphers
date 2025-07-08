@@ -328,3 +328,33 @@
 }
 
 
+
+/* Smooth fade-in for output */
+.fade-in {
+  opacity: 0;
+  animation: fadeIn 0.6s forwards ease-in;
+}
+@keyframes fadeIn {
+  to {
+    opacity: 1;
+  }
+}
+
+/* Make output box more prominent */
+#outputText {
+  background-color: #f9f9f9;
+  border-left: 5px solid #007bff;
+  font-size: 1.1rem;
+  word-break: break-word;
+}
+
+/* Enhance button styles */
+.btn {
+  letter-spacing: 0.5px;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
+}
+.btn:active {
+  transform: scale(0.98);
+}
+
+
